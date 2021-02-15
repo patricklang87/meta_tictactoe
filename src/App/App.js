@@ -1,21 +1,42 @@
 import React from 'react';
 import './App.css';
-import { Board } from '../Board/Board';
+import { MetaBoard } from '../MetaBoard/MetaBoard.js';
 import { InfoDis } from '../InfoDis/InfoDis';
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.updateBoard = this.updateBoard.bind(this);
+    this.togglePlayer = this.togglePlayer.bind(this);
+    this.updateGameState = this.updateGameState.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.changeBoardColor = this.changeBoardColor.bind(this);
+    this.checkForGameWinner = this.checkForGameWinner.bind(this);
+    this.defineNextBoard = this.defineNextBoard.bind(this);
+    this.resetGame = this.resetGame.bind(this);
     this.state = {
-      boardState: Array(9).fill(null),
+      gameState: Array(9).fill(null),
       xIsNext: true,
+      nextPlayBoard: [0, 1, 2, 3, 4, 5, 6, 7, 8],
       winner: null
     };
   }
 
-  checkForWinner() {
-    const board = this.state.boardState;
+  resetGame() {
+    this.setState({ gameState: Array(9).fill(null),
+      xIsNext: true,
+      nextPlayBoard: [0, 1, 2, 3, 4, 5, 6, 7, 8],
+      winner: null });
+      let boards = document.getElementsByClassName('Board');
+      let tiles = document.getElementsByClassName('tile');
+      let body = document.getElementsByTagName('body')[0];
+      for (let board of boards) board.style.background = "firebrick";
+      for (let tile of tiles) tile.style.background = "rgb(223, 253, 253)";
+      body.style.background = "rgb(173, 250, 255)";
+  }
+
+  
+  checkForGameWinner() {
+    let board = this.state.gameState;
     if ((board[0] === board[1] && board[0] === board[2] && board[0] != null) || 
         (board[0] === board[3] && board[0] === board[6] && board[0] != null) ||
         (board[0] === board[4] && board[0] === board[8] && board[0] != null) ||
@@ -24,38 +45,69 @@ class App extends React.Component {
         (board[3] === board[4] && board[4] === board[5] && board[3] != null) ||
         (board[6] === board[7] && board[6] === board[8] && board[6] != null) ||
         (board[2] === board[4] && board[2] === board[6] && board[2] != null)) {
-        this.setState({ winner: (this.state.xIsNext) ? 'RED' : 'BLUE' });
-        return true;
-        } else {
-          return false;
-        }
-      
+        let winner = (this.state.xIsNext) ? 'red' : 'blue';
+        this.setState({ winner: winner });
+        document.getElementsByTagName('body')[0].style.background = winner;
+        return winner;
+    } else {
+        return false;
+    }   
   }
+  
 
   
 
-  updateBoard(position) {
-      let stateAr = this.state.boardState;
-      let playerValue = (this.state.xIsNext) ? "X" : "O";
-      stateAr.splice(position, 1, playerValue);
-      this.setState({ boardState: stateAr});
-      let isAWinner = this.checkForWinner();
-      if (isAWinner) {
-        /*
-        let body = document.getElementsByTagName('BODY')[0];
-        if (this.state.winner == "RED") body.style.backgroundColor = "darkblue";
-        else body.style.backgroundColor = "firebrick";
-        */
-        return;
-    }
-    this.setState({ xIsNext: (this.state.xIsNext) ? false : true });   
+  updateGameState(board, localWinner) {
+    let gameState = this.state.gameState;
+    if (localWinner) gameState.splice(board, 1, localWinner);
+    return gameState;
   }
+
+  defineNextBoard(boardNumber) {
+    console.log("boardNumber: ", boardNumber);
+    let nextBoard = [];
+    if (this.state.gameState[boardNumber] == null) nextBoard.push(boardNumber);
+    else {
+      for (let x in this.state.gameState) {
+        if (this.state.gameState[x] == null) nextBoard.push(Number(x));
+      }
+    } 
+    this.changeBoardColor(nextBoard);
+    return nextBoard;
+  }
+
+  changeBoardColor(nextBoard) {
+    let boards = document.getElementsByClassName('Board');
+    let nextColor = (this.state.xIsNext) ? "darkblue" : "firebrick";
+    for (let x =0; x < 9; x++) {   
+        if (nextBoard.includes(x)) boards[x].style.background = nextColor; 
+        else boards[x].style.background = "rgb(173, 250, 255)";
+    }    
+ }
+
+  togglePlayer() {
+    let xIsNext = (this.state.xIsNext) ? false : true;
+    return xIsNext;
+  }
+
+  handleClick(tileNumber, boardNumber, winner) {
+    this.setState({ gameState: this.updateGameState(boardNumber, winner), 
+                    nextPlayBoard: this.defineNextBoard(tileNumber),
+                    xIsNext: this.togglePlayer()});
+    this.checkForGameWinner();
+  }
+
+
 
   render() {
     return (
       <div>
-        <InfoDis xIsNext={this.state.xIsNext} winner={this.state.winner} />
-        <Board boardState={this.state.boardState} updateBoard={this.updateBoard} xIsNext={this.state.xIsNext} isWinner={this.state.winner} />
+        <h1>MetaTicTacToe</h1>
+        <div id="gameSpace">
+          <InfoDis xIsNext={this.state.xIsNext} winner={this.state.winner} resetGame={this.resetGame} />
+          <MetaBoard gameState={this.state.gameState} checkForWinner={this.checkForWinner} xIsNext={this.state.xIsNext} handleTurnUpdate={this.handleClick} nextPlayBoard={this.state.nextPlayBoard} isWinner={this.state.winner} addLocalWinner={this.addLocalWinner} />
+        </div>
+        <button onClick={this.resetGame}>Reset</button>
       </div>
     );     
   }
