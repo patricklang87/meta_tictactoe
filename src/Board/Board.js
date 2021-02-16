@@ -58,7 +58,8 @@ export class Board extends React.Component {
         let [ boardNumber, tileNumber ] = this.getBoardAndTileNumber(tile); 
         if ((!this.props.isWinner) && this.state.boardState[tileNumber] == null && this.props.nextBoard.includes(boardNumber)) {
             let currentPlayer = (this.props.xIsNext) ? "red" : "blue";
-            tile.style.backgroundColor = currentPlayer;    
+            let backgroundColor = (currentPlayer === "red") ? '#f30067' : '#00d1cd'
+            tile.style.backgroundColor = backgroundColor;    
             this.updateBoardState(tileNumber, currentPlayer);
             let winner = this.checkForWinner(this.state.boardState);   
             this.updateValidBoards(tileNumber, boardNumber, winner);

@@ -1,7 +1,8 @@
 BODY {
-    background-color: rgb(173, 250, 255);
+    background-color: #444444;
     text-align: center;
     font-family: 'Newsreader', serif;
+    color: #eaeaea;
 }
 
 h1 {
@@ -13,5 +14,6 @@ button {
     font-family: 'Newsreader', serif;
     font-size: 30px;
     margin-top: 15px;
-    background-color: firebrick;
+    margin-bottom: 30px;
+    background-color: #f30067;
 }

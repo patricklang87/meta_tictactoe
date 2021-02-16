@@ -1,5 +1,5 @@
 .Board {
-    background: firebrick;
+    background: #f30067;
     height: 90%;
     width: 90%;
     display: grid;
@@ -21,7 +21,7 @@
 }
 
 .tile {
-    background:rgb(223, 253, 253);
+    background:#444444;
     height: 100%;
     width: 100%;
     border-radius: 2%;

@@ -3,6 +3,13 @@ import './App.css';
 import { MetaBoard } from '../MetaBoard/MetaBoard.js';
 import { InfoDis } from '../InfoDis/InfoDis';
 
+export const palettes = [{
+  background: '#444444',
+  player1: '#f30067',
+  player2: '#00d1cd',
+  text: '#eaeaea'
+}];
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -29,9 +36,9 @@ class App extends React.Component {
       let boards = document.getElementsByClassName('Board');
       let tiles = document.getElementsByClassName('tile');
       let body = document.getElementsByTagName('body')[0];
-      for (let board of boards) board.style.background = "firebrick";
-      for (let tile of tiles) tile.style.background = "rgb(223, 253, 253)";
-      body.style.background = "rgb(173, 250, 255)";
+      for (let board of boards) board.style.background = palettes[0].player1;
+      for (let tile of tiles) tile.style.background = palettes[0].background;
+      body.style.background = palettes[0].background;
   }
 
   
@@ -45,9 +52,9 @@ class App extends React.Component {
         (board[3] === board[4] && board[4] === board[5] && board[3] != null) ||
         (board[6] === board[7] && board[6] === board[8] && board[6] != null) ||
         (board[2] === board[4] && board[2] === board[6] && board[2] != null)) {
-        let winner = (this.state.xIsNext) ? 'red' : 'blue';
+        let winner = (this.state.xIsNext) ? 'player1' : 'player2';
         this.setState({ winner: winner });
-        document.getElementsByTagName('body')[0].style.background = winner;
+        document.getElementsByTagName('body')[0].style.background = palettes[0].winner;
         return winner;
     } else {
         return false;
@@ -78,10 +85,10 @@ class App extends React.Component {
 
   changeBoardColor(nextBoard) {
     let boards = document.getElementsByClassName('Board');
-    let nextColor = (this.state.xIsNext) ? "darkblue" : "firebrick";
+    let nextColor = (this.state.xIsNext) ? "#00d1cd" : "#f30067";
     for (let x =0; x < 9; x++) {   
         if (nextBoard.includes(x)) boards[x].style.background = nextColor; 
-        else boards[x].style.background = "rgb(173, 250, 255)";
+        else boards[x].style.background = "#d8c292";
     }    
  }
 
