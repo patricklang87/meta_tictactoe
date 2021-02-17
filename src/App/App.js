@@ -114,7 +114,7 @@ class App extends React.Component {
           <InfoDis xIsNext={this.state.xIsNext} winner={this.state.winner} resetGame={this.resetGame} />
           <MetaBoard gameState={this.state.gameState} checkForWinner={this.checkForWinner} xIsNext={this.state.xIsNext} handleTurnUpdate={this.handleClick} nextPlayBoard={this.state.nextPlayBoard} isWinner={this.state.winner} addLocalWinner={this.addLocalWinner} />
         </div>
-        <button onClick={this.resetGame}>Reset</button>
+        {/* <button onClick={this.resetGame}>Reset</button> */}
       </div>
     );     
   }

@@ -14,12 +14,6 @@
     align-items: center;
 }
 
-.Overlay {
-    height: 100%;
-    width: 100%;
-    background:rgba(255, 95, 95, 0.836)
-}
-
 .tile {
     background:#444444;
     height: 100%;

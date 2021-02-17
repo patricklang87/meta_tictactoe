@@ -10,6 +10,7 @@ export class Board extends React.Component {
         this.checkLocalWinner = this.checkLocalWinner.bind(this);
         this.checkForWinner = this.checkForWinner.bind(this);
         this.getBoardAndTileNumber = this.getBoardAndTileNumber.bind(this);
+        this.markFinishedBoard = this.markFinishedBoard.bind(this);
         this.renderBoard = this.renderBoard.bind(this);
         this.state = {  boardState: Array(9).fill(null),
                         /*localWinner: null*/ }
@@ -20,7 +21,7 @@ export class Board extends React.Component {
         currentBoard.splice(tile, 1, currentPlayer);
         this.setState({ boardState: currentBoard });
     } 
-
+    
     checkLocalWinner() {
         let board = this.state.boardState;
         let winner = this.checkForWinner(board);
@@ -28,11 +29,23 @@ export class Board extends React.Component {
             console.log("There's a winner! ", this.props.boardNumber, winner);
             //this.setState({ localWinner : winner });
             this.props.addLocalWinner(this.props.boardNumber, winner);
-            
-            //document.getElementsByClassName('Overlay')[this.props.boardNumber].style.backgroundColor = winner;
         }
     }
+    
+    markFinishedBoard(winner) {
+        if (winner) {
+            let winnerColor = (winner === "red") ? '#f30067' : '#00d1cd';
+            let tiles = document.getElementsByClassName('tile');
+            console.log(tiles);
+            for (let tile of tiles) {
+                console.log("tile.id: ", tile.id);
+                if (Number(tile.id[0]) === Number(this.props.boardNumber)) tile.style.backgroundColor = winnerColor;
+            }
+        }
+        
+    }
 
+    
     checkForWinner(board) {
         if ((board[0] === board[1] && board[0] === board[2] && board[0] != null) || 
             (board[0] === board[3] && board[0] === board[6] && board[0] != null) ||
@@ -63,6 +76,7 @@ export class Board extends React.Component {
             this.updateBoardState(tileNumber, currentPlayer);
             let winner = this.checkForWinner(this.state.boardState);   
             this.updateValidBoards(tileNumber, boardNumber, winner);
+            this.markFinishedBoard(winner);
         }       
     }
 
@@ -90,12 +104,9 @@ export class Board extends React.Component {
 
     render() {
         return (
-            <div className="Overlay">
                 <div className="Board"  >
                     {this.renderBoard()}
-                </div>
-            </div>
-            
+                </div>     
         );
     }
 }
