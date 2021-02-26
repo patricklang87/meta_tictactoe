@@ -56,13 +56,12 @@ class App extends React.Component {
         this.setState({ winner: winner });
         document.getElementsByTagName('body')[0].style.background = palettes[0].winner;
         return winner;
+    } else if (!this.state.gameState.includes(null)){
+      return "tie game";
     } else {
         return false;
     }   
   }
-  
-
-  
 
   updateGameState(board, localWinner) {
     let gameState = this.state.gameState;

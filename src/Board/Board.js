@@ -12,6 +12,7 @@ export class Board extends React.Component {
         this.getBoardAndTileNumber = this.getBoardAndTileNumber.bind(this);
         this.markFinishedBoard = this.markFinishedBoard.bind(this);
         this.renderBoard = this.renderBoard.bind(this);
+        this.checkForBlockedBoard = this.checkForBlockedBoard.bind(this);
         this.state = {  boardState: Array(9).fill(null),
                         /*localWinner: null*/ }
     }
@@ -21,6 +22,15 @@ export class Board extends React.Component {
         currentBoard.splice(tile, 1, currentPlayer);
         this.setState({ boardState: currentBoard });
     } 
+
+    checkForBlockedBoard() {
+        let board = this.state.boardState;
+        console.log(this.props.boardNumber, board);
+        if (!board.includes(null)) {
+            console.log("blockedBoard");
+            this.props.addLocalWinner(this.props.boardNumber, "blockedBoard");
+        }
+    }
     
     checkLocalWinner() {
         let board = this.state.boardState;
@@ -29,11 +39,13 @@ export class Board extends React.Component {
             console.log("There's a winner! ", this.props.boardNumber, winner);
             //this.setState({ localWinner : winner });
             this.props.addLocalWinner(this.props.boardNumber, winner);
+            return;
         }
+        this.checkForBlockedBoard();
     }
     
     markFinishedBoard(winner) {
-        if (winner) {
+        if ((winner) && (winner !== "blockedBoard")) {
             let winnerColor = (winner === "red") ? '#f30067' : '#00d1cd';
             let tiles = document.getElementsByClassName('tile');
             console.log(tiles);
@@ -57,9 +69,12 @@ export class Board extends React.Component {
             (board[2] === board[4] && board[2] === board[6] && board[2] != null)) {
             let winner = (this.props.xIsNext) ? 'red' : 'blue';
             return winner;
+        } else if (!this.state.boardState.includes(null)) {
+            let result = "blockedBoard";
+            return result;
         } else {
             return false;
-        }   
+        }  
       }
     
     updateValidBoards(tileNumber, boardNumber, winner) {
